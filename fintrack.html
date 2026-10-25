@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinTrack — Student Finance Manager</title>
+  <link rel="stylesheet" href="fintrack.css" />
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="light-mode">
+    
+
+  <!-- ───────────────────────────── NAVBAR ───────────────────────────── -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">
+      <span class="nav-logo" aria-hidden="true">💰</span>
+      <span class="nav-title">FinTrack</span>
+    </div>
+
+    <!-- Desktop nav links -->
+    <ul class="nav-links" role="list">
+      <li><a href="#dashboard"   class="nav-link active" data-section="dashboard">Dashboard</a></li>
+      <li><a href="#income"      class="nav-link"        data-section="income">Income</a></li>
+      <li><a href="#expenses"    class="nav-link"        data-section="expenses">Expenses</a></li>
+      <li><a href="#history"     class="nav-link"        data-section="history">History</a></li>
+      <li><a href="#insights"    class="nav-link"        data-section="insights">Insights</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <!-- Dark-mode toggle -->
+      <button class="toggle-dark" id="darkModeBtn" aria-label="Toggle dark mode">
+        <span class="icon-sun" aria-hidden="true">☀️</span>
+        <span class="icon-moon" aria-hidden="true">🌙</span>
+      </button>
+      <!-- Hamburger (mobile) -->
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile drawer -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <ul role="list">
+      <li><a href="#dashboard" class="nav-link" data-section="dashboard">Dashboard</a></li>
+      <li><a href="#income"    class="nav-link" data-section="income">Income</a></li>
+      <li><a href="#expenses"  class="nav-link" data-section="expenses">Expenses</a></li>
+      <li><a href="#history"   class="nav-link" data-section="history">History</a></li>
+      <li><a href="#insights"  class="nav-link" data-section="insights">Insights</a></li>
+    </ul>
+  </div>
+
+  <!-- ───────────────────────────── MAIN ────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- ══════════════ 1. DASHBOARD ══════════════ -->
+    <section id="dashboard" class="section active" aria-labelledby="dash-heading">
+
+      <!-- Welcome banner -->
+      <div class="welcome-banner">
+        <div>
+          <h1 id="dash-heading">Hey there, <span id="studentName">Student</span> 👋</h1>
+          <p>Here's how your money's looking today.</p>
+        </div>
+        <div class="welcome-date" id="currentDate"></div>
+      </div>
+
+      <!-- Summary cards -->
+      <div class="summary-grid">
+        <article class="summary-card card-income">
+          <div class="card-icon" aria-hidden="true">📥</div>
+          <div class="card-body">
+            <span class="card-label">Total Income</span>
+            <span class="card-value" id="totalIncome">₹0.00</span>
+          </div>
+        </article>
+
+        <article class="summary-card card-expense">
+          <div class="card-icon" aria-hidden="true">📤</div>
+          <div class="card-body">
+            <span class="card-label">Total Expenses</span>
+            <span class="card-value" id="totalExpenses">₹0.00</span>
+          </div>
+        </article>
+
+        <article class="summary-card card-balance">
+          <div class="card-icon" aria-hidden="true">💳</div>
+          <div class="card-body">
+            <span class="card-label">Current Balance</span>
+            <span class="card-value" id="currentBalance">₹0.00</span>
+          </div>
+        </article>
+      </div>
+
+      <!-- Charts -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h2 class="chart-title">Spending by Category</h2>
+          <div class="chart-wrap">
+            <canvas id="pieChart" aria-label="Expense breakdown pie chart" role="img"></canvas>
+            <p class="chart-empty" id="pieEmpty">Add expenses to see your spending breakdown.</p>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <h2 class="chart-title">Income vs Expenses</h2>
+          <div class="chart-wrap">
+            <canvas id="barChart" aria-label="Income vs expenses bar chart" role="img"></canvas>
+            <p class="chart-empty" id="barEmpty">Add transactions to see comparisons.</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══════════════ 2. INCOME TRACKER ══════════════ -->
+    <section id="income" class="section" aria-labelledby="income-heading">
+      <h2 id="income-heading" class="section-heading">Income Tracker</h2>
+      <p class="section-sub">Log your stipends, part-time earnings, scholarships, and allowances.</p>
+
+      <div class="form-card">
+        <h3>Add Income</h3>
+        <div class="form-grid" id="incomeForm">
+          <div class="form-group">
+            <label for="incomeSource">Source</label>
+            <input type="text" id="incomeSource" placeholder="e.g. Part-time job, Allowance" />
+          </div>
+          <div class="form-group">
+            <label for="incomeAmount">Amount (₹)</label>
+            <input type="number" id="incomeAmount" placeholder="0.00" min="0" step="0.01" />
+          </div>
+          <div class="form-group">
+            <label for="incomeDate">Date</label>
+            <input type="date" id="incomeDate" />
+          </div>
+          <div class="form-group form-actions">
+            <button class="btn btn-primary" id="addIncomeBtn">Add Income</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent income entries -->
+      <div class="entries-section">
+        <h3>Recent Income</h3>
+        <div class="entries-list" id="incomeList">
+          <p class="empty-state">No income entries yet. Add your first one above!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ 3. EXPENSE TRACKER ══════════════ -->
+    <section id="expenses" class="section" aria-labelledby="expense-heading">
+      <h2 id="expense-heading" class="section-heading">Expense Tracker</h2>
+      <p class="section-sub">Track where every rupee goes — food, transport, books, and more.</p>
+
+      <div class="form-card">
+        <h3>Add Expense</h3>
+        <div class="form-grid" id="expenseForm">
+          <div class="form-group">
+            <label for="expenseCategory">Category</label>
+            <select id="expenseCategory">
+              <option value="">— Select category —</option>
+              <option value="Food">🍔 Food</option>
+              <option value="Transport">🚌 Transport</option>
+              <option value="Books">📚 Books & Stationery</option>
+              <option value="Entertainment">🎮 Entertainment</option>
+              <option value="Health">💊 Health</option>
+              <option value="Clothing">👕 Clothing</option>
+              <option value="Utilities">💡 Utilities</option>
+              <option value="Other">📦 Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="expenseAmount">Amount (₹)</label>
+            <input type="number" id="expenseAmount" placeholder="0.00" min="0" step="0.01" />
+          </div>
+          <div class="form-group">
+            <label for="expenseDate">Date</label>
+            <input type="date" id="expenseDate" />
+          </div>
+          <div class="form-group full-width">
+            <label for="expenseNotes">Notes (optional)</label>
+            <input type="text" id="expenseNotes" placeholder="e.g. Lunch at canteen" />
+          </div>
+          <div class="form-group form-actions">
+            <button class="btn btn-danger" id="addExpenseBtn">Add Expense</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent expense entries -->
+      <div class="entries-section">
+        <h3>Recent Expenses</h3>
+        <div class="entries-list" id="expenseList">
+          <p class="empty-state">No expenses yet. Start logging to see your habits!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ 4. TRANSACTION HISTORY ══════════════ -->
+    <section id="history" class="section" aria-labelledby="history-heading">
+      <h2 id="history-heading" class="section-heading">Transaction History</h2>
+      <p class="section-sub">All your income and expense records in one place.</p>
+
+      <!-- Search & filter -->
+      <div class="history-controls">
+        <input type="search" id="searchInput" placeholder="Search transactions…" aria-label="Search transactions" />
+        <select id="filterType" aria-label="Filter by type">
+          <option value="all">All Types</option>
+          <option value="income">Income only</option>
+          <option value="expense">Expenses only</option>
+        </select>
+        <select id="filterCategory" aria-label="Filter by category">
+          <option value="all">All Categories</option>
+        </select>
+      </div>
+
+      <!-- Transaction table -->
+      <div class="table-wrap">
+        <table class="tx-table" aria-label="Transaction list">
+          <thead>
+            <tr>
+              <th scope="col">Type</th>
+              <th scope="col">Source / Category</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Date</th>
+              <th scope="col">Notes</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody id="transactionBody">
+            <!-- rows injected by JS -->
+          </tbody>
+        </table>
+        <p class="empty-state" id="historyEmpty">No transactions found.</p>
+      </div>
+    </section>
+
+    <!-- ══════════════ 5. BUDGET INSIGHTS ══════════════ -->
+    <section id="insights" class="section" aria-labelledby="insights-heading">
+      <h2 id="insights-heading" class="section-heading">Budget Insights</h2>
+      <p class="section-sub">See how you're tracking and stay on top of your budget.</p>
+
+      <!-- Alert banner -->
+      <div class="alert-banner" id="alertBanner" role="alert" aria-live="polite" hidden>
+        ⚠️ <strong>Heads up!</strong> Your expenses exceed your income. Time to cut back!
+      </div>
+
+      <!-- Insight cards -->
+      <div class="insight-cards">
+        <div class="insight-card">
+          <span class="insight-label">Money Spent</span>
+          <span class="insight-value" id="spentPct">0%</span>
+          <div class="progress-bar-wrap" aria-label="Spending progress">
+            <div class="progress-bar" id="spentBar" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div class="insight-card">
+          <span class="insight-label">Savings Rate</span>
+          <span class="insight-value" id="savingsPct">0%</span>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar progress-savings" id="savingsBar" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div class="insight-card">
+          <span class="insight-label">Largest Expense Category</span>
+          <span class="insight-value" id="topCategory">—</span>
+        </div>
+
+        <div class="insight-card">
+          <span class="insight-label">Transactions This Month</span>
+          <span class="insight-value" id="txCount">0</span>
+        </div>
+      </div>
+
+      <!-- Per-category breakdown -->
+      <div class="breakdown-section">
+        <h3>Spending Breakdown</h3>
+        <div id="categoryBreakdown" class="category-bars">
+          <p class="empty-state">Add expenses to see your breakdown.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ───────────────────────────── FOOTER ───────────────────────────── -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer-inner">
+      <span>FinTrack · Built for students, by students 🎓</span>
+      <span class="footer-right">Data saved in your browser · <button class="link-btn" id="clearAllBtn">Clear all data</button></span>
+    </div>
+  </footer>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="fintrack.js"></script>
+</body>
+</html>

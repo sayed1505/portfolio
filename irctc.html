@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRCTC Next - Premium Booking Experience</title>
+    <link rel="stylesheet" href="irctc.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Network Speed Indicator -->
+    <div id="network-status" class="network-status">
+        <div style="display:flex; align-items:center;">
+            <span class="status-dot"></span>
+            <span id="network-text">Checking Network Stability...</span>
+        </div>
+        <span id="latency-ms" style="margin-left:10px; opacity:0.8;">-- ms</span>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="port.html" class="back-btn" style="text-decoration:none; margin-right: 1.5rem; display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border: 1px solid var(--divider); border-radius: 20px; font-weight: 600; color: var(--text-secondary); transition: all 0.2s; background: transparent; font-family: 'Outfit', sans-serif; cursor: pointer; font-size: 0.9rem;" onmouseover="this.style.background='rgba(0,0,0,0.04)'; this.style.borderColor='var(--primary-blue)'; this.style.color='var(--primary-blue)';" onmouseout="this.style.background='transparent'; this.style.borderColor='var(--divider)'; this.style.color='var(--text-secondary)';">
+            <i class="fa-solid fa-arrow-left"></i> Back to Portfolio
+        </a>
+        <div class="logo">
+            <i class="fa-solid fa-train-subway"></i>
+            IRCTC <span class="beta-tag">Next Gen</span>
+        </div>
+        <div class="nav-links">
+            <div class="nav-item" id="login-nav">
+                <span class="nav-link"><i class="fa-regular fa-user"></i> Login</span>
+                <div class="dropdown-preview">
+                    <h4>Welcome Guest</h4>
+                    <p style="font-size:0.85rem; margin-top:5px;">Login for faster booking & personalized offers.</p>
+                </div>
+            </div>
+            <div class="nav-item" id="distance-nav">
+                <span class="nav-link"><i class="fa-solid fa-clock"></i> Book by Distance</span>
+                <div class="dropdown-panel" id="distance-panel">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+            <div class="nav-item" id="seat-view-nav">
+                <span class="nav-link"><i class="fa-solid fa-chair"></i> 3D Seat View</span>
+            </div>
+            <div class="nav-item" id="smart-book-nav">
+                <span class="nav-link"><i class="fa-solid fa-bolt"></i> Smart Book</span>
+            </div>
+            <div class="nav-item" id="cancel-nav">
+                <span class="nav-link"><i class="fa-solid fa-ban"></i> Cancellation</span>
+            </div>
+        </div>
+        <div class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-container">
+
+        <!-- Login Modal -->
+        <div id="login-modal" class="modal">
+            <!-- ... (Login modal content remains unchanged) ... -->
+            <div class="modal-content">
+                <span class="close-btn"><i class="fa-solid fa-xmark"></i></span>
+                <h2><i class="fa-solid fa-right-to-bracket" style="color:var(--brand-orange)"></i> Login</h2>
+                <form id="login-form">
+                    <div class="input-group">
+                        <label>Username / Mobile</label>
+                        <input type="text" id="login-name" required placeholder="Enter your registered ID">
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" id="login-pass" required placeholder="••••••••">
+                    </div>
+
+                    <!-- Simplified Verification -->
+                    <div class="checkbox-group"
+                        style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem;">
+                        <input type="checkbox" id="human-check" required>
+                        <label for="human-check"
+                            style="cursor:pointer; display:flex; align-items:center; gap:5px; margin:0;">
+                            <i class="fa-solid fa-shield-halved" style="color:var(--success-green)"></i>
+                            Smart Verify (Instant)
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-primary">
+                        <span>Secure Login</span>
+                        <div class="spinner callback-spinner hidden"></div>
+                    </button>
+
+                    <div id="login-alert" class="alert-box alert-success hidden" style="margin-top:1rem;">
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span>Login Successful! Redirecting...</span>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard / Placeholder Home Content -->
+        <!-- ... (Home content remains unchanged) ... -->
+
+        <!-- ... (Seat View content remains unchanged) ... -->
+
+        <!-- ... (Smart Book content remains unchanged) ... -->
+
+        <!-- Cancellation Section -->
+        <section id="cancel-section" class="content-section hidden">
+            <div class="section-header">
+                <h2>Ticket Cancellation & Refunds</h2>
+                <p>Instant refunds to source account for IRCTC iWallet users.</p>
+            </div>
+
+            <div class="input-group" style="max-width: 480px; margin-top:2rem;">
+                <label>Enter PNR Number</label>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="cancel-pnr-input" placeholder="e.g. 8456213098" maxlength="10">
+                    <button class="btn-primary" onclick="searchPNR()" style="width: auto; padding:0 25px;">
+                        Search PNR
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ticket Details (Hidden) -->
+            <div id="cancel-details" class="hidden"
+                style="margin-top: 2rem; background: #fafafa; padding: 25px; border-radius: 12px; border: 1px solid #eee;">
+                <div
+                    style="display:flex; justify-content:space-between; border-bottom:1px solid #ddd; padding-bottom:15px; margin-bottom:20px;">
+                    <div>
+                        <h3 id="c-train-name" style="color:var(--primary-blue); margin-bottom:5px;">--</h3>
+                        <p id="c-date" style="font-size:0.95rem; color:#666;">--</p>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="status-badge status-open"
+                            style="background:#E8F5E9; color:#2E7D32;">CONFIRMED</span>
+                        <div style="margin-top:5px; font-weight:700; font-size:1.1rem; color:var(--primary-blue);"
+                            id="c-pnr-display">--</div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:25px;">
+                    <label
+                        style="font-weight:600; margin-bottom:15px; display:block; color:var(--text-secondary);">Select
+                        Passengers to Cancel:</label>
+                    <div id="c-passenger-list" style="display:flex; flex-direction:column; gap:10px;">
+                        <!-- Checkboxes populated by JS -->
+                    </div>
+                </div>
+
+                <div
+                    style="background:#FFF3E0; padding:20px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-size:0.85rem; color:#E65100; font-weight:700;">ESTIMATED REFUND AMOUNT</div>
+                        <div style="font-size:1.8rem; font-weight:800; color:#E65100;">₹<span
+                                id="c-refund-amount">0</span></div>
+                        <div style="font-size:0.75rem; color:#E65100; opacity:0.8;">(Deduction: ₹60 per passenger)</div>
+                    </div>
+                    <button class="btn-primary" style="background:#D32F2F; width:auto; border:none;"
+                        onclick="confirmCancellation()">
+                        Cancel & Refund <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div id="cancel-success" class="alert-box alert-success hidden" style="margin-top:2rem; padding:20px;">
+                <i class="fa-solid fa-check-circle" style="font-size:1.5rem;"></i>
+                <div>
+                    <h4 style="margin-bottom:5px;">Cancellation Successful</h4>
+                    <span>Refund of <strong>₹<span id="final-refund"></span></strong> initiated to source account.
+                        Reference ID: <span id="ref-id" style="font-family:monospace;"></span></span>
+
+                    <div style="margin-top:15px; padding-top:15px; border-top:1px solid #C8E6C9; font-size:0.9rem;">
+                        <div style="font-weight:700; margin-bottom:5px;">Need Help?</div>
+                        <div style="display:flex; gap:20px; align-items:center;">
+                            <span><i class="fa-solid fa-envelope"></i> refunds@irctc.co.in</span>
+                            <span><i class="fa-solid fa-phone"></i> 139 (24x7)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard / Placeholder Home Content -->
+        <section id="home-dashboard" class="content-section">
+            <div class="hero-card">
+                <h1>Experience Hyper-Fast Booking</h1>
+                <p style="font-size:1.2rem;">Zero Lag. Instant Refunds. 3D Selection.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-box" onclick="document.getElementById('smart-book-nav').click()">
+                        <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+                        <h3>Tatkal Sniper</h3>
+                        <p>Optimized flows for booking during peak Tatkal hours with auto-fill.</p>
+                    </div>
+                    <div class="feature-box" onclick="document.getElementById('seat-view-nav').click()">
+                        <div class="feature-icon"><i class="fa-solid fa-cubes-stacked"></i></div>
+                        <h3>Visual Seat Map</h3>
+                        <p>Don't guess your seat. See it in 3D before you book.</p>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-icon"><i class="fa-solid fa-wallet"></i></div>
+                        <h3>Smart Refunds</h3>
+                        <p>Failed transaction? Get money back in 5 minutes, guaranteed.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seat View Section -->
+        <section id="seat-view-section" class="content-section hidden">
+            <div class="section-header" style="display:flex; justify-content:space-between; align-items:center;">
+                <h2>3D Coach Visualization</h2>
+                <div style="display:flex; gap:15px; align-items:center;">
+                    <label
+                        style="display:flex; align-items:center; gap:5px; cursor:pointer; font-weight:600; color:var(--brand-orange);">
+                        <input type="checkbox" id="solo-mode-toggle"> Solo Traveler
+                    </label>
+                    <div class="train-selector">
+                        <select id="train-select" style="padding:10px; border-radius:8px; border:1px solid #ccc;">
+                            <option value="express">Rajdhani Express (First AC)</option>
+                            <option value="shatabdi">Shatabdi Express (Chair Car)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="coach-container-3d">
+                <div class="coach-floor">
+                    <!-- Seats generated by JS -->
+                </div>
+            </div>
+
+            <div class="seat-legend">
+                <div class="legend-item"><span class="seat available"
+                        style="width:20px; height:20px; display:inline-block;"></span> Available</div>
+                <div class="legend-item"><span class="seat booked"
+                        style="width:20px; height:20px; display:inline-block;"></span> Booked</div>
+                <div class="legend-item"><span class="seat selected"
+                        style="width:20px; height:20px; display:inline-block;"></span> Selected</div>
+            </div>
+
+            <div class="booking-summary"
+                style="background:#F5F7FA; padding:20px; border-radius:12px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-size:0.9rem; color:#666;">Selected Seats</div>
+                    <div style="font-size:1.5rem; font-weight:700; color:var(--primary-blue);" id="seat-count">0</div>
+                </div>
+                <div>
+                    <div style="font-size:0.9rem; color:#666;">Total Price</div>
+                    <div style="font-size:1.5rem; font-weight:700; color:var(--primary-blue);">₹<span
+                            id="total-price">0</span></div>
+                </div>
+                <button id="confirm-seat-btn" class="btn-primary" style="width:auto; padding:0 30px;" disabled>
+                    Proceed with Selection <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Smart Book Section -->
+        <section id="smart-book-section" class="content-section hidden">
+            <!-- Progress Tracker -->
+            <div class="progress-bar-container">
+                <div class="progress-track"></div>
+                <div class="progress-fill" id="booking-fill" style="width: 0%;"></div>
+                <div class="steps-indicator">
+                    <div class="step active" data-step="1">
+                        <div class="step-circle">1</div>
+                        <div>Train</div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-circle">2</div>
+                        <div>Date</div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-circle">3</div>
+                        <div>Details</div>
+                    </div>
+                    <div class="step" data-step="4">
+                        <div class="step-circle">4</div>
+                        <div>Review</div>
+                    </div>
+                    <div class="step" data-step="5">
+                        <div class="step-circle">5</div>
+                        <div>Payment</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-container">
+                <!-- Step 1: Select Train -->
+                <div class="wizard-step active" data-step="1">
+                    <h3>Select Train</h3>
+                    <div class="input-group">
+                        <input type="text" placeholder="Search train name or number..." style="margin-bottom:1rem;">
+                    </div>
+                    <div class="train-list" id="smart-train-list"></div>
+                </div>
+
+                <!-- Step 2: Choose Date -->
+                <div class="wizard-step" data-step="2">
+                    <h3>Journey Date</h3>
+                    <input type="date" id="book-date" class="simulated-input"
+                        style="padding:15px; width:100%; border:2px solid #ddd; border-radius:8px;">
+                    <br><br>
+                    <button class="btn-primary" onclick="window.wizardNext()">Next Step</button>
+                </div>
+
+                <!-- Step 3: Passenger Details -->
+                <div class="wizard-step" data-step="3">
+                    <h3>Passenger Details</h3>
+                    <div
+                        style="background:#E3F2FD; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #BBDEFB;">
+                        <i class="fa-solid fa-bolt" style="color:#1565C0;"></i>
+                        <strong>Smart Feature:</strong> Master List Auto-fill enabled.
+                    </div>
+
+                    <!-- Selected Seat Confirmation -->
+                    <div id="seat-confirm-msg" class="hidden"
+                        style="background:#F1F8E9; padding:12px; border-radius:8px; margin-bottom:15px; border:1px solid #C5E1A5; color:#33691E;">
+                        <i class="fa-solid fa-check-circle"></i>
+                        Confirmed Seat: <strong id="assigned-seat-display">--</strong>
+                    </div>
+                    <!-- Dynamic Passenger Forms -->
+                    <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+                        <button type="button" class="btn-primary" id="open-map-btn"
+                            style="width:auto; padding:8px 15px; background:var(--brand-orange); font-size:0.85rem;">
+                            <i class="fa-solid fa-map-location-dot"></i> Select / Change Seats
+                        </button>
+                    </div>
+
+                    <div id="passenger-list">
+                        <!-- Populated by JS -->
+                    </div>
+                    <button class="btn-primary" onclick="window.wizardNext()">Next Step</button>
+                </div>
+
+                <!-- Step 4: Review -->
+                <div class="wizard-step" data-step="4">
+                    <h3>Review Booking</h3>
+                    <div
+                        style="padding:20px; background:#fafafa; border-radius:12px; margin-bottom:20px; border:1px solid #EEE;">
+                        <p><strong>Train:</strong> <span id="review-train">--</span></p>
+                        <p><strong>Time:</strong> <span id="review-time">--</span></p>
+                        <p><strong>Date:</strong> <span id="review-date">--</span></p>
+                        <p><strong>Passenger:</strong> <span id="review-name">--</span></p>
+                        <p><strong>Seat No.:</strong> <span id="review-seats">--</span></p>
+                        <p><strong>Total Amount:</strong> ₹<span id="review-total">1,250</span></p>
+                    </div>
+                    <button class="btn-primary" onclick="window.wizardNext()">Proceed to Pay</button>
+                </div>
+
+                <!-- Step 5: Payment Solution (Enhanced) -->
+                <div class="wizard-step" data-step="5">
+                    <h3>Select Payment Mode</h3>
+
+                    <!-- Smart Wallet (Primary Solution) -->
+                    <div class="payment-card recommended">
+                        <div class="card-header">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <i class="fa-solid fa-wallet" style="color:var(--brand-orange); font-size:1.5rem;"></i>
+                                <div>
+                                    <div style="font-weight:700; font-size:1.1rem;">IRCTC iWallet</div>
+                                    <div style="font-size:0.85rem; opacity:0.8;">Zero-failure booking. Instant debit.
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="text-align:right;">
+                                <div style="font-size:0.8rem;">Balance</div>
+                                <div style="font-weight:700; font-size:1.1rem;">₹4,500.00</div>
+                            </div>
+                        </div>
+                        <button class="btn-primary" style="background:white; color:var(--primary-blue);"
+                            id="pay-wallet-btn" onclick="processPayment('wallet')">
+                            Pay ₹1,250 via Wallet
+                        </button>
+                    </div>
+
+                    <!-- UPI & Other Options -->
+                    <div class="payment-grid">
+                        <div class="pay-option" onclick="processPayment('upi')">
+                            <i class="fa-brands fa-google-pay" style="color:#4285F4;"></i>
+                            <span>UPI / Apps</span>
+                            <span class="badge-fast">FAST</span>
+                        </div>
+
+                        <div class="pay-option" onclick="processPayment('card')">
+                            <i class="fa-regular fa-credit-card" style="color:#1565C0;"></i>
+                            <span>Card</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Processing Overlay -->
+                    <div id="payment-overlay" class="payment-overlay">
+                        <div class="payment-modal">
+                            <div class="spinner-container">
+                                <div class="processing-spinner"></div>
+                            </div>
+                            <h3 id="pay-status-title">Connecting to Bank...</h3>
+                            <div class="status-steps">
+                                <div class="step-item active" id="step-bank"><i
+                                        class="fa-solid fa-circle-notch fa-spin"></i> Verifying Balance</div>
+                                <div class="step-item" id="step-irctc"><i class="fa-regular fa-circle"></i> Allocating
+                                    Seat</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Final Success Screen -->
+                    <div id="booking-success" class="booking-success">
+                        <div class="success-card">
+                            <div class="success-header">
+                                <i class="fa-solid fa-ticket"></i>
+                                <span>Booking Confirmed</span>
+                            </div>
+                            <div class="pnr-display">
+                                <div style="font-size:0.9rem; color:#666;">PNR NUMBER</div>
+                                <div id="final-pnr"
+                                    style="font-size:2rem; font-weight:800; letter-spacing:2px; color:var(--primary-blue);">
+                                    --</div>
+                            </div>
+                            <div class="journey-details">
+                                <div class="detail-row">
+                                    <span>Train</span>
+                                    <strong id="final-train">--</strong>
+                                </div>
+                                <div class="detail-row">
+                                    <span>Passengers</span>
+                                    <strong id="final-passengers">Rahul Sharma (28)</strong>
+                                </div>
+                            </div>
+                            <div style="padding:0 2rem 2rem;">
+                                <button class="btn-primary" onclick="location.reload()">Book Return Journey</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="irctc.js"></script>
+</body>
+
+</html>
